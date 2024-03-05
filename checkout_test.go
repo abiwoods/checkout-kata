@@ -13,7 +13,7 @@ func TestGetCheckoutReturnsEpmtyCheckoutStruct(t *testing.T) {
 
 func TestScanIncreasesBasketCounts(t *testing.T) {
 	products := []string{"A", "B", "C", "A"}
-	c := setupCheckout(products)
+	c := setupCheckout(t, products)
 
 	assert.Equal(t, 2, c.Basket["A"]) // checking order that these are input does not cause issues
 	assert.Equal(t, 1, c.Basket["B"])
@@ -36,11 +36,11 @@ func TestGetTotalPrice(t *testing.T) {
 		expected int
 	}{
 		"basic - one product": {
-			input: []string{"D"},
+			input:    []string{"D"},
 			expected: 15,
 		},
 		"basic - multiple of 1": {
-			input: []string{"C", "C", "C", "C"},
+			input:    []string{"C", "C", "C", "C"},
 			expected: 4 * 20,
 		},
 		"basic - mixture": {
@@ -51,20 +51,45 @@ func TestGetTotalPrice(t *testing.T) {
 			input:    []string{},
 			expected: 0,
 		},
+		"offer only": {
+			input:    []string{"A", "A", "A"},
+			expected: 130,
+		},
+		"offer and another item": {
+			input:    []string{"A", "B", "A", "A"},
+			expected: 130 + 30,
+		},
+		"offer and more of same item": {
+			input:    []string{"A", "A", "A", "A", "A"},
+			expected: 130 + (2 * 50),
+		},
+		"multiples of one offer": {
+			input: []string{"B", "B", "B", "B"},
+			expected: 2 * 45,
+		},
+		"mixture of everything": {
+			input: []string{"D", "B", "C", "A", "A", "D", "A", "B", "B", "B", "A", "C", "D"},
+			expected: 130 + 50 + (2 * 45) + (2 * 20) + (3 * 15),
+		},
 	}
 
-	for _, test := range tests {
-		c := setupCheckout(test.input)
+	for name, test := range tests {
+		if name == "mixture of everything" {
+			assert.True(t, true)
+		}
+
+		c := setupCheckout(t, test.input)
 
 		price := c.getTotalPrice()
-		assert.Equal(t, test.expected, price)
+		assert.Equal(t, test.expected, price, name)
 	}
 }
 
-func setupCheckout(SKUs []string) checkout {
+func setupCheckout(t *testing.T, SKUs []string) checkout {
 	c := GetCheckout()
 	for _, s := range SKUs {
-		c.scan(s)
+		err := c.scan(s)
+		assert.NoError(t, err)
 	}
 	return c
 }

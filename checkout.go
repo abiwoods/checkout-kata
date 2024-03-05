@@ -41,5 +41,20 @@ func getProductTotal(sku string, count int) int {
 		return 0
 	}
 
-	return product.UnitPrice * count
+	offerPrice, remainingCount := getOfferTotal(sku, count) 
+
+	return offerPrice + product.UnitPrice * remainingCount
+}
+
+func getOfferTotal(sku string, count int) (int, int) {
+	offer, err := db.getOffer(sku)
+	if err != nil {
+		return 0, count
+	}
+
+	offerCount := count/offer.Count
+	remainingCount := count - offerCount * offer.Count
+	offerTotal := offerCount * offer.Price
+
+	return offerTotal, remainingCount
 }
