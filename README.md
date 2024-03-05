@@ -24,3 +24,12 @@ interface ICheckout
     int GetTotalPrice();
 }
 ```
+
+## Setup locally
+
+```golang
+go build && go run .
+```
+
+This creates a command line application requiring input
+
