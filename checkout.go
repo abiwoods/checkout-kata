@@ -1,8 +1,6 @@
 package main
 
-import (
-
-)
+import "fmt"
 
 // placeholder until we set up wrapper
 var db = mockDB{}
@@ -28,6 +26,20 @@ func (c checkout) scan(SKU string) error {
 }
 
 func (c checkout) getTotalPrice() int {
-	// todo
-	return 1
+	total := 0
+	for sku, count := range c.Basket {
+		total += getProductTotal(sku, count)
+	}
+	
+	return total
+}
+
+func getProductTotal(sku string, count int) int {
+	product, err := db.getProduct(sku)
+	if err != nil {
+		fmt.Printf("tried to get details for %s - not found", sku)
+		return 0
+	}
+
+	return product.UnitPrice * count
 }
