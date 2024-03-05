@@ -64,11 +64,11 @@ func TestGetTotalPrice(t *testing.T) {
 			expected: 130 + (2 * 50),
 		},
 		"multiples of one offer": {
-			input: []string{"B", "B", "B", "B"},
+			input:    []string{"B", "B", "B", "B"},
 			expected: 2 * 45,
 		},
 		"mixture of everything": {
-			input: []string{"D", "B", "C", "A", "A", "D", "A", "B", "B", "B", "A", "C", "D"},
+			input:    []string{"D", "B", "C", "A", "A", "D", "A", "B", "B", "B", "A", "C", "D"},
 			expected: 130 + 50 + (2 * 45) + (2 * 20) + (3 * 15),
 		},
 	}
@@ -85,7 +85,7 @@ func TestGetTotalPrice(t *testing.T) {
 	}
 }
 
-func setupCheckout(t *testing.T, SKUs []string) checkout {
+func setupCheckout(t *testing.T, SKUs []string) Checkout {
 	c := GetCheckout()
 	for _, s := range SKUs {
 		err := c.scan(s)

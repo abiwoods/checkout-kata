@@ -7,9 +7,9 @@ import (
 type dataSource interface {
 	getProduct(string) (Product, error)
 	getOffer(string) (Offer, error)
-	setProductPrice(string, int)
+	setProductPrice(Product)
 	removeProduct(string)
-	setOffer(string, int, int)
+	setOffer(Offer)
 	removeOffer(string)
 }
 
@@ -66,6 +66,10 @@ func (mockDB) getOffer(sku string) (Offer, error) {
 
 	return result, nil
 }
+
+// Functions after this point not used - could easily extend to include these
+// as options in the app - would be more useful in a real world scenario with a 
+// DB/not in memory data
 
 func (mockDB) setProductPrice(product Product) {
 	products[product.SKU] = product

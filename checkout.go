@@ -2,20 +2,17 @@ package main
 
 import "fmt"
 
-// placeholder until we set up wrapper
-var db = mockDB{}
-
-type checkout struct {
+type Checkout struct {
 	Basket map[string]int
 }
 
-func GetCheckout() checkout {
-	return checkout{
+func GetCheckout() Checkout {
+	return Checkout{
 		Basket: make(map[string]int),
 	}
 }
 
-func (c checkout) scan(SKU string) error {
+func (c Checkout) scan(SKU string) error {
 	// check that the product exists
 	if _, err := db.getProduct(SKU); err != nil {
 		return err
@@ -25,12 +22,12 @@ func (c checkout) scan(SKU string) error {
 	return nil
 }
 
-func (c checkout) getTotalPrice() int {
+func (c Checkout) getTotalPrice() int {
 	total := 0
 	for sku, count := range c.Basket {
 		total += getProductTotal(sku, count)
 	}
-	
+
 	return total
 }
 
@@ -41,9 +38,9 @@ func getProductTotal(sku string, count int) int {
 		return 0
 	}
 
-	offerPrice, remainingCount := getOfferTotal(sku, count) 
+	offerPrice, remainingCount := getOfferTotal(sku, count)
 
-	return offerPrice + product.UnitPrice * remainingCount
+	return offerPrice + product.UnitPrice*remainingCount
 }
 
 func getOfferTotal(sku string, count int) (int, int) {
@@ -52,8 +49,8 @@ func getOfferTotal(sku string, count int) (int, int) {
 		return 0, count
 	}
 
-	offerCount := count/offer.Count
-	remainingCount := count - offerCount * offer.Count
+	offerCount := count / offer.Count
+	remainingCount := count - offerCount*offer.Count
 	offerTotal := offerCount * offer.Price
 
 	return offerTotal, remainingCount
