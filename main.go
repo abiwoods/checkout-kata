@@ -15,6 +15,9 @@ func main() {
 	db = mockDB{}
 	checkout := GetCheckout()
 
+	fmt.Println("==== CHECKOUT APP ====")
+	fmt.Println("")
+
 	for !exitApp {
 		fmt.Println("Input action - scan, checkout, exit:")
 		input, err := reader.ReadString('\n')
@@ -25,7 +28,7 @@ func main() {
 		}
 
 		standardisedInput := standardiseString(input)
-		fmt.Println(standardisedInput)
+		fmt.Println()
 
 		switch standardisedInput {
 		case "SCAN":
