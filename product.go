@@ -1,11 +1,11 @@
-
-type product struct {
+package main 
+type Product struct {
 	SKU       string
 	UnitPrice int
-	Offer     offer
 }
 
-type offer struct {
+type Offer struct {
+	SKU string
 	Count int
 	Price int
 }
